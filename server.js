@@ -10,7 +10,8 @@ app.get("/d/:videoId", (req, res) => {
     if (!videoId) return res.status(400).send("Thiếu Video ID!");
 
     const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
-    const command = `yt-dlp -f "worst[ext=mp4]" -o - "${videoUrl}"`;
+    //const command = `yt-dlp -f "worst[ext=mp4]" -o - "${videoUrl}"`;
+    const command = `yt-dlp --cookies cookies.txt -f "worst[ext=mp4]" -o - "${videoUrl}"`;
 
     res.setHeader("Content-Disposition", `attachment; filename=${videoId}.mp4`);
     res.setHeader("Content-Type", "video/mp4");
