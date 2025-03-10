@@ -3,18 +3,16 @@ const { exec } = require("child_process");
 const cors = require("cors");
 
 const app = express();
-app.use(cors()); // Cho phép mọi trang web gọi API
+app.use(cors());
 
-app.get("/download", (req, res) => {
-    const videoUrl = req.query.url;
+app.get("/d/:videoId", (req, res) => {
+    const videoId = req.params.videoId;
+    if (!videoId) return res.status(400).send("Thiếu Video ID!");
 
-    if (!videoUrl) {
-        return res.status(400).send("Thiếu URL video!");
-    }
+    const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+    const command = `yt-dlp -f "worst[ext=mp4]" -o - "${videoUrl}"`;
 
-    const command = `yt-dlp -f best -o - "${videoUrl}"`;
-
-    res.setHeader("Content-Disposition", "attachment; filename=video.mp4");
+    res.setHeader("Content-Disposition", `attachment; filename=${videoId}.mp4`);
     res.setHeader("Content-Type", "video/mp4");
 
     const process = exec(command, { maxBuffer: 1024 * 1024 * 50 });
